@@ -1,0 +1,21 @@
+---
+- name: reload nginx
+  systemd:
+    name: nginx
+    state: reloaded
+
+- name: reload php-fpm
+  systemd:
+    name: php-fpm
+    state: reloaded
+
+- name: restart postgresql
+  systemd:
+    name: postgresql-13
+    state: restarted
+
+- name: restart keepalived
+  systemd:
+    name: keepalived
+    state: restarted
+

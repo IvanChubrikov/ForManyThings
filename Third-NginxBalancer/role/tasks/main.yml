@@ -1,0 +1,108 @@
+---
+- name: Install necessary packages
+  yum:
+    name:
+      - keepalived
+    state: present
+  become: true
+
+- name: Configure Keepalived
+  template:
+    src: keepalived.conf.j2
+    dest: /etc/keepalived/keepalived.conf
+    mode: 0644
+  notify:
+    - Restart Keepalived
+
+- name: Install Nginx
+   yum:
+     name: nginx
+     state: latest
+   tags:
+     - nginx
+
+- name: Configure Nginx
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+  notify:
+    - reload nginx
+  tags:
+    - nginx
+
+- name: Install PHP-FPM
+  yum:
+    name: php-fpm
+    state: latest
+  tags:
+    - php-fpm
+
+- name: Configure PHP-FPM
+  template:
+    src: www.conf.j2
+    dest: /etc/php-fpm.d/www.conf
+  notify:
+    - reload php-fpm
+  tags:
+    - php-fpm
+
+- name: Install PostgreSQL
+  yum:
+    name:
+      - postgresql13-server
+      - postgresql13-contrib
+      - postgresql13
+    state: latest
+  tags:
+    - postgresql
+
+- name: Initialize PostgreSQL database
+  become: yes
+  become_user: postgres
+  command: /usr/pgsql-13/bin/initdb -D {{ pg_data_directory }}
+  when: not pg_data_directory.stat.exists
+  tags:
+    - postgresql
+
+- name: Configure PostgreSQL
+  template:
+    src: postgresql.conf.j2
+    dest: "{{ pg_data_directory }}/postgresql.conf"
+  notify:
+    - restart postgresql
+  tags:
+    - postgresql
+
+- name: Configure pg_hba.conf
+  template:
+    src: pg_hba.conf.j2
+    dest: "{{ pg_data_directory }}/pg_hba.conf"
+  notify:
+    - restart postgresql
+  tags:
+    - postgresql
+
+- name: Start PostgreSQL service
+  systemd:
+    name: postgresql-13
+    state: started
+    enabled: yes
+  tags:
+    - postgresql
+
+- name: Configure Keepalived
+  template:
+    src: keepalived.conf.j2
+    dest: /etc/keepalived/keepalived.conf
+  notify:
+    - restart keepalived
+  tags:
+    - keepalived
+
+- name: Start Keepalived service
+  systemd:
+    name: keepalived
+    state: started
+    enabled: yes
+  tags:
+    - keepalived

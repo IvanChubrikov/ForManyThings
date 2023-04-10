@@ -1,0 +1,33 @@
+#------------------------------------------------------------------------------
+# CONNECTIONS AND AUTHENTICATION
+#------------------------------------------------------------------------------
+
+# - Connection Settings -
+
+listen_addresses = '*'
+port = {{ postgres_port }}
+
+# - Authentication -
+
+# Type of authentication for local connections
+local   all             all                                     trust
+
+# Type of authentication for host connections
+host    all             all             0.0.0.0/0               md5
+
+# - Resource Consumption -
+
+shared_buffers = {{ postgres_shared_buffers }}
+effective_cache_size = {{ postgres_effective_cache_size }}
+work_mem = {{ postgres_work_mem }}
+maintenance_work_mem = {{ postgres_maintenance_work_mem }}
+max_worker_processes = {{ postgres_max_worker_processes }}
+max_parallel_workers_per_gather = {{ postgres_max_parallel_workers_per_gather }}
+
+# - WAL Settings -
+
+wal_level = replica
+max_wal_senders = {{ postgres_max_wal_senders }}
+wal_keep_segments = {{ postgres_wal_keep_segments }}
+archive_mode = on
+archive_command = '/bin/true'

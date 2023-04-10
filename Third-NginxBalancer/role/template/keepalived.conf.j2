@@ -1,0 +1,26 @@
+vrrp_instance VI_1 {
+    interface {{ keepalived_interface }};
+    state MASTER;
+    virtual_router_id 51;
+    priority {{ keepalived_priority }};
+    virtual_ipaddress {
+        {{ keepalived_virtual_ip }}
+    }
+}
+
+virtual_server {{ keepalived_virtual_ip }} 80 {
+    delay_loop 6;
+    lb_algo rr;
+    lb_kind DR;
+    persistence_timeout 50;
+    protocol TCP;
+
+    real_server {{ ansible_host }} 80 {
+        weight 1;
+        TCP_CHECK {
+            connect_timeout 3
+            nb_get_retry 3
+            delay_before_retry 3
+        }
+    }
+}
