@@ -1,17 +1,21 @@
-- name: Install Nginx
-  yum:
-    name: nginx
-    state: present
+- name: ensure nginx is at the latest version
+  apt: name=nginx state=latest
+  become: yes
 
-#- name: Copy Nginx configuration file
-#  copy:
-#     src: nginx.conf
-#     dest: /etc/nginx/nginx.conf
-#     mode: '0644'
-#   notify: Restart Nginx
+- name: start nginx
+  service:
+      name: nginx
+      state: started
+      become: yes
 
-- name: Start Nginx
-  systemd:
+- name: copy the nginx config file and restart nginx
+  template:
+    src: static_site.cfg
+    dest: /etc/nginx/sites-available/static_site.cfg
+    become: yes
+
+- name: restart nginx
+  service:
     name: nginx
-    state: started
-    enabled: true
+    state: restarted
+    become: yes
