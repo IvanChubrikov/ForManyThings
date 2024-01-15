@@ -15,3 +15,4 @@ provider "yandex" {
   folder_id = var.folder_id_variable
   zone      = "ru-central1-c"
 }
+

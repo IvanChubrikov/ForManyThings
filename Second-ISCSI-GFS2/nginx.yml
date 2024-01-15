@@ -1,9 +1,0 @@
----
-- hosts: all
-  become: yes
-  remote_user: ichubrikov
-  vars:
-      ansible_ssh_private_key_file: ~/.ssh/OTUS-NEW
-  roles:
-    - role
-
