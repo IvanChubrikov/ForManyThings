@@ -1,0 +1,10 @@
+
+# Example modification for a web service definition to include a health check
+services:
+  web:
+    # Existing service configuration remains as is
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
