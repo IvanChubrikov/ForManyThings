@@ -264,7 +264,7 @@ resource "terraform_data" "run_ansible" {
     command = <<EOF
     ansible-playbook -u ubuntu -i hosts.ini --private-key ${var.private_key_path} web-service.yml --extra-var "public_ip=${yandex_vpc_address.custom_addr.external_ipv4_address[0].address} private_key=${var.private_key_path}"
     rm -rf /tmp/fetched
-    ansible-playbook -i postgresql_cluster/inventory postgresql_cluster/deploy_pgcluster.yml
+    ansible-playbook -i hosts.ini k8s-setup.yml
     EOF
   }
 }
