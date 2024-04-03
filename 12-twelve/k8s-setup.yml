@@ -1,0 +1,58 @@
+- hosts: all
+  become: yes
+  tasks:
+    - name: Install Docker
+      apt: 
+        name: docker.io
+        state: present
+
+    - name: Install apt-transport-https
+      apt:
+        name: apt-transport-https
+        state: present
+
+    - name: Add Kubernetes repository key
+      apt_key:
+        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+        state: present
+
+    - name: Add Kubernetes repository
+      apt_repository:
+        repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
+        state: present
+
+    - name: Install kubelet, kubeadm and kubectl
+      apt:
+        name: "{{ packages }}"
+      vars:
+        packages:
+        - kubelet
+        - kubeadm
+        - kubectl
+        state: present
+
+    - name: Initialize the Kubernetes cluster
+      command: kubeadm init --pod-network-cidr=10.244.0.0/16
+      when: inventory_hostname == groups['masters'][0]
+
+    - name: Create .kube directory
+      file:
+        path: "$HOME/.kube"
+        state: directory
+        mode: '0755'
+      when: inventory_hostname == groups['masters'][0]
+
+    - name: Copy admin.conf to user's kube config
+      copy:
+        src: "/etc/kubernetes/admin.conf"
+        dest: "$HOME/.kube/config"
+        remote_src: yes
+      when: inventory_hostname == groups['masters'][0]
+
+    - name: Deploy Calico network
+      command: kubectl create -f https://docs.projectcalico.org/manifests/calico.yaml
+      when: inventory_hostname == groups['masters'][0]
+
+    - name: Join node to the Kubernetes cluster
+      command: "{{ hostvars[groups['masters'][0]]['join_command'] }}"
+      when: inventory_hostname in groups['workers']
