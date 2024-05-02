@@ -13,5 +13,5 @@ provider "yandex" {
   token     = var.auth_token
   cloud_id  = var.cloud_id_variable
   folder_id = var.folder_id_variable
-  zone      = "ru-central1-c"
+  zone      = "ru-central1-a"
 }

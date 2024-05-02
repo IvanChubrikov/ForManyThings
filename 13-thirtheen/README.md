@@ -1,1 +1,1 @@
-Создает load-balancer yandex cloud, 2 сервера proxy nginx, 2 nginx+php-fpm+wordpress backends и pgsql cluster
+Project creates one YC LB, 2 nginx proxy server, 2 nginx+php-fpm+wordpress backends, pxc cluster+proxysql(3 servers) and Hashicorp Vault server.

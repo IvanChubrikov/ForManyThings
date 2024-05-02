@@ -29,7 +29,7 @@ define( 'DB_USER', 'wp_user' );
 define( 'DB_PASSWORD', 'wp_password' );
 
 /** Имя сервера базы данных */
-define( 'DB_HOST', 'database-0:5432' );
+define( 'DB_HOST', 'database-0' );
 
 /** Кодировка базы данных для создания таблиц. */
 define( 'DB_CHARSET', 'utf8' );
