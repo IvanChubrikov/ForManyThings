@@ -1,0 +1,16 @@
+# /etc/ceph/ceph.conf
+
+[global]
+fsid = {FSID}
+mon_initial_members = vm1, vm2
+mon_host = 192.168.31.9, 192.168.31.96
+public_network = 192.168.31.0/24
+cluster_network = 192.168.31.0/24
+
+[osd]
+osd_journal_size = 100
+osd_pool_default_size = 2  # Default replication factor
+osd_pool_default_min_size = 1
+osd_pool_default_pg_num = 128
+osd_pool_default_pgp_num = 128
+osd_crush_chooseleaf_type = 1

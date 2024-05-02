@@ -1,5 +1,5 @@
 resource "yandex_compute_instance" "default" {
-  name        = "otus-learn-vm"
+  name        = "otus-learn-1"
   platform_id = "standard-v1"
 
   resources {
@@ -9,7 +9,7 @@ resource "yandex_compute_instance" "default" {
 
   boot_disk {
     initialize_params {
-      image_id = "fd8go38kje4f6v3g2k4q" # ОС (Ubuntu, 22.04 LTS)
+      image_id = "fd8go38kje4f6v3g2k4q"
     }
 
   }

@@ -1,0 +1,7 @@
+---
+
+- name: Install Ceph Cluster
+  hosts: ceph_nodes
+  become: yes
+  roles:
+    - { role: ceph }

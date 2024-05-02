@@ -1,17 +1,17 @@
-variable "private_key_path" {
-  type    = string
-  default = "~/.ssh/OTUS-NEW"
-}
+#variable "private_key_path" {
+#  type    = string
+#  default = "~/.ssh/OTUS-NEW"
+#}
 
-variable "public_key" {
-  type    = string
-  default = ""
-}
+#variable "public_key" {
+#  type    = string
+#  default = ""
+#}
 
-variable "auth_token" {
-  type    = string
-  default = ""
-}
+#variable "auth_token" {
+#  type    = string
+#  default = ""
+#}
 
 variable "cloud_id_variable" {
   type    = string

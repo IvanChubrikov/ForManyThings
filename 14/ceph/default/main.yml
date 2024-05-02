@@ -1,0 +1,4 @@
+---
+ceph_mon_node: "vm1"
+ceph_mon_nodes: "vm1 vm2"
+ceph_nodes: "vm1 vm2"

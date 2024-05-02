@@ -1,0 +1,76 @@
+---
+- name: Download Ceph GPG key
+  get_url:
+    url: https://download.ceph.com/keys/release.asc
+    dest: /tmp/ceph.gpg
+
+
+- name: Add Ceph GPG key
+  command: apt-key add /tmp/ceph.gpg
+  register: key_add_result
+  until: key_add_result.rc == 0
+  retries: 3
+  delay: 10
+
+- name: Add Ceph repository
+  apt_repository:
+    repo: 'deb https://download.ceph.com/debian-octopus {{ ubuntu_codename }} main'
+    state: present
+  vars:
+    ubuntu_codename: "{{ ansible_lsb.codename }}"
+
+#- name: Install Python3 and pip
+#  apt:
+#    name:
+#      - python3
+#      - python3-pip
+#    state: present
+
+#- name: Install ceph-deploy
+#  pip:
+#    name: ceph-deploy
+#    state: present
+
+#- name: Update package cache
+#  apt:
+#    update_cache: yes
+
+- name: Install Ceph packages
+  apt:
+    name:
+      - ceph-base
+      - ceph-common
+      - ceph-mgr
+      - ceph-mon
+
+- name: Copy Ceph configuration to nodes
+  copy:
+    src: /etc/ceph/ceph.conf
+    dest: /etc/ceph/ceph.conf
+    owner: root
+    mode: "0644"
+    remote_src: no
+
+- name: Create initial configuration for the Ceph cluster
+  command: ceph-deploy new {{ ceph_mon_nodes }}
+  when: inventory_hostname == ceph_mon_node
+
+- name: Distribute configuration to other nodes
+  command: ceph-deploy --overwrite-conf admin {{ ceph_nodes }}
+  when: inventory_hostname == ceph_mon_node
+
+- name: Create OSDs
+  command: ceph-deploy osd create {{ inventory_hostname }}:/dev/sdX
+  register: osd_result
+
+- name: Check OSD status
+  shell: ceph osd tree
+  when: osd_result is succeeded
+
+- name: Prepare OSDs
+  command: ceph-deploy osd prepare {{ inventory_hostname }}:/dev/sdX
+  register: osd_result
+
+- name: Activate OSDs
+  command: ceph-deploy osd activate {{ inventory_hostname }}:/dev/sdX
+  when: osd_result is succeeded
