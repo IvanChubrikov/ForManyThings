@@ -6,3 +6,7 @@ vargant init
 vagrant up
 Для запуска ansible плейбуков:
 ansible-playbook -i roles/{rolename}/inventory/hosts deploy.yml
+
+На нодах установлены prometheus-exporter для сбора метрик сервера и filebeat для сбора логов
+
+Для создания бэкапа используется скрипт backup-script.sh который запускает по cron снимок сервера каждое воскресенье в 3 AM
