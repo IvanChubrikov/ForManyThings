@@ -1,0 +1,30 @@
+---
+ - name: Set up VM configuration
+   hosts: all
+   become: yes
+   tasks:
+
+  - name: Generate SSH key pair
+    ansible.builtin.command: ssh-keygen -t rsa -b 2048 -f /root/.ssh/id_rsa -q -N ""
+
+  - name: Copy SSH key to authorized_keys
+    ansible.builtin.copy:
+      src: /root/.ssh/id_rsa.pub
+      dest: /home/{{ ansible_user }}/.ssh/authorized_keys
+      owner: "{{ ansible_user }}"
+      mode: "0600"
+
+  - name: Allow SSH traffic
+    ansible.builtin.iptables:
+      chain: INPUT
+      protocol: tcp
+      dport: 22
+      jump: ACCEPT
+
+  - name: Set permissive firewall policy
+    ansible.builtin.iptables:
+      chain: INPUT
+      jump: ACCEPT
+
+  - name: Save firewall configuration
+    ansible.builtin.command: iptables-save | sudo tee /etc/iptables/rules.v4

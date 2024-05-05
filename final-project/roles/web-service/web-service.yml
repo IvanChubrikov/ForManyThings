@@ -1,0 +1,8 @@
+---
+- name: Install and Configure web-service
+  hosts: all
+  become: yes
+  vars_files:
+    - /otus/finalka/roles/web-service/web-service/vars/packages.yml
+  roles:
+    - web-service

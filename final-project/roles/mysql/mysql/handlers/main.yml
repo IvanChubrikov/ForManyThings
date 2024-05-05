@@ -1,0 +1,4 @@
+---
+- name: mysql etcd
+  systemd: name=mysql state=restarted enabled=yes
+

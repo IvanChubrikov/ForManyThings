@@ -1,0 +1,6 @@
+---
+- name: Install and Configure mysql
+  hosts: all
+  become: yes
+  roles:
+    - mysql

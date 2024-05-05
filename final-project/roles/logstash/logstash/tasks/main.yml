@@ -1,0 +1,11 @@
+---
+- name: Install Logstash
+  apt:
+    name: logstash
+    state: present
+
+- name: Ensure Logstash is running and enabled
+  systemd:
+    name: logstash
+    state: started
+    enabled: yes

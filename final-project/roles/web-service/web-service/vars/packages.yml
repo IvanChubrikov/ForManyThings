@@ -1,0 +1,18 @@
+---
+packages:
+  - nginx
+  - php7.2-fpm
+  - php-curl 
+  - php-json
+  - php-gd
+  - php-mbstring
+  - php-intl
+  - php-bcmath
+  - php-bz2
+  - php-readline
+  - php-zip
+  - php-xml
+  - php-xmlrpc
+  - php-soap
+  - php-imagick
+  - php-mysql

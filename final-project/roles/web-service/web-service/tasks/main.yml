@@ -1,0 +1,51 @@
+---
+#- hosts: all
+#  become: yes
+#  gather_facts: true
+#  vars_files:
+#    - vars/packages.yml
+    - name: Install packages
+      apt:
+        pkg: "{{ packages }}"
+        state: latest
+
+    - name: Download and extract WordPress
+      unarchive:
+        src: https://ru.wordpress.org/latest-ru_RU.tar.gz
+        dest: /var/www
+        remote_src: yes
+
+    - name: Configure wp-config.php
+      template:
+        src: templates/wp-config.php.j2
+        dest: /var/www/wordpress/wp-config.php
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Configure wp.conf
+      template:
+        src: templates/wp.conf.j2
+        dest: /etc/nginx/sites-available/wp.conf
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Create symlink for wp.conf
+      file:
+        src: /etc/nginx/sites-available/wp.conf
+        dest: /etc/nginx/sites-enabled/wp.conf
+        state: link
+
+    - name: Delete default.conf
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+
+    - name: Recursively change ownership of WordPress directory
+      file:
+        path: /var/www/wordpress
+        state: directory
+        recurse: yes
+        owner: www-data
+        group: www-data

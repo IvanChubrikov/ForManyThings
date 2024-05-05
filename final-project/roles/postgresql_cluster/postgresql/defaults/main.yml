@@ -1,0 +1,38 @@
+---
+
+# Настройки etcd
+etcd_version: "latest"
+etcd_listen_port: 2379
+etcd_peer_port: 2380
+
+# Настройки Patroni
+patroni_version: "latest"
+patroni_restapi_port: 8008
+patroni_scope: postgres
+patroni_namespace: /db/
+patroni_cluster_name: "postgres_cluster"
+
+# Настройки PostgreSQL
+postgresql_version: "12"
+postgresql_listen_port: 5432
+postgresql_data_dir: "/var/lib/postgresql/12/main"
+postgresql_max_wal_senders: 5
+postgresql_max_replication_slots: 5
+postgresql_checkpoint_timeout: 30
+postgresql_authentication:
+  replication:
+    username: replicator
+    password: replicapass
+  superuser:
+    username: postgres
+    password: secretpassword
+
+# Конфигурация сети
+postgres_cluster:
+  - ip: 192.168.31.96
+  - ip: 192.168.31.9
+
+# Конфигурация безопасности
+ssl_enabled: false
+ssl_cert_file: "/etc/ssl/certs/ssl-cert-snakeoil.pem"
+ssl_key_file: "/etc/ssl/private/ssl-cert-snakeoil.key"

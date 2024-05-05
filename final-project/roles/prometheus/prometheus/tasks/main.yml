@@ -1,0 +1,24 @@
+---
+# tasks file for prometheus
+- name: Download Prometheus tar.gz
+  get_url:
+    url: "https://github.com/prometheus/prometheus/releases/download/v{{ prometheus_version }}/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz"
+    dest: "/tmp/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz"
+
+- name: Unarchive Prometheus tar.gz
+  unarchive:
+    src: "/tmp/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz"
+    dest: "/opt/prometheus"
+    remote_src: yes
+    creates: "/opt/prometheus/prometheus-{{ prometheus_version }}.linux-amd64/prometheus"
+
+- name: Copy prometheus configuration
+  template:
+    src: prometheus.yml.j2
+    dest: "/opt/prometheus/prometheus-{{ prometheus_version }}.linux-amd64/prometheus.yml"
+
+- name: Ensure Prometheus service is running
+  systemd:
+    name: prometheus
+    state: started
+    enabled: yes

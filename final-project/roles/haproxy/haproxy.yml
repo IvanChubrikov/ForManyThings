@@ -1,0 +1,6 @@
+---
+- name: Install and Configure haproxy
+  hosts: all
+  become: yes
+  roles:
+    - haproxy

@@ -1,0 +1,76 @@
+- name: Install Python2
+  shell: apt-get install -y python-pip
+- name: Install etcd
+  apt:
+    name: etcd
+    state: latest
+
+- name: Create a directory using shell
+  file: 
+    path:  "/etc/etcd"
+    state: directory
+    owner: "root"
+    group: "root"
+
+- name: Configure etcd
+  template:
+    src: templates/etcd.conf.j2
+    dest: /etc/etcd/etcd.conf
+  notify:
+    - restart etcd
+
+- name: Start etcd
+  systemd:
+    name: etcd
+    enabled: yes
+    state: started
+
+- name: Install Patroni
+  apt:
+    name: patroni
+    state: latest
+
+- name: Create a directory using shell
+  file:
+    path:  "/etc/patroni"
+    state: directory
+    owner: "root"
+    group: "root"
+
+- name: Configure Patroni
+  template:
+    src: templates/patroni.yml.j2
+    dest: /etc/patroni/config.yml
+  notify:
+    - restart patroni
+
+- name: Install PostgreSQL development libraries for Debian/Ubuntu
+  apt:
+    name:
+      - libpq-dev
+      - postgresql-server-dev-all
+    state: present
+    update_cache: yes
+
+
+- name: Install psycopg2 Python package
+  pip:
+    name: psycopg2
+    state: present
+
+- name: Start Patroni
+  systemd:
+    name: patroni
+    enabled: yes
+    state: started
+
+- name: Install PostgreSQL
+  apt:
+    name: postgresql
+    state: latest
+
+- name: Ensure PostgreSQL is stopped and disabled
+  systemd:
+    name: postgresql
+    enabled: no
+    state: stopped

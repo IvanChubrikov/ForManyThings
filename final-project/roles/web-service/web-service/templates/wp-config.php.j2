@@ -1,0 +1,46 @@
+<?php
+/**
+ * Основные параметры WordPress.
+ *
+ * @package WordPress
+ */
+
+// ** Настройки базы данных ** //
+define( 'DB_NAME', 'wordpress_db' );      // Имя базы данных
+define( 'DB_USER', 'wordpress_user' );    // Имя пользователя
+define( 'DB_PASSWORD', 'your_password' ); // Пароль
+define( 'DB_HOST', 'localhost' );         // Если MySQL находится на том же сервере, что и WordPress
+define( 'DB_CHARSET', 'utf8' );
+define( 'DB_COLLATE', '' );
+
+/**#@+
+ * Уникальные ключи для аутентификации.
+ * Используйте сервис WordPress.org для генерации: https://api.wordpress.org/secret-key/1.1/salt/
+ */
+define( 'AUTH_KEY',         'поместите ваш ключ здесь' );
+define( 'SECURE_AUTH_KEY',  'поместите ваш ключ здесь' );
+define( 'LOGGED_IN_KEY',    'поместите ваш ключ здесь' );
+define( 'NONCE_KEY',        'поместите ваш ключ здесь' );
+define( 'AUTH_SALT',        'поместите ваш ключ здесь' );
+define( 'SECURE_AUTH_SALT', 'поместите ваш ключ здесь' );
+define( 'LOGGED_IN_SALT',   'поместите ваш ключ здесь' );
+define( 'NONCE_SALT',       'поместите ваш ключ здесь' );
+/**#@-*/
+
+$table_prefix = 'wp_'; // Префикс для таблиц в базе данных
+
+/**
+ * Для разработчиков: Режим отладки WordPress.
+ */
+define( 'WP_DEBUG', false );
+
+/* Это всё, дальше не редактируем. Успехов в создании! */
+
+/** Абсолютный путь к директории WordPress. */
+if ( ! defined( 'ABSPATH' ) ) {
+	define( 'ABSPATH', __DIR__ . '/' );
+}
+
+/** Подключает файлы WordPress и устанавливает переменные. */
+require_once ABSPATH . 'wp-settings.php';
+

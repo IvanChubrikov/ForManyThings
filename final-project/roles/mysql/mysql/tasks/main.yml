@@ -1,0 +1,32 @@
+    - name: Install packages
+      apt:
+        pkg:
+          - mysql-server
+          - mysql-client
+        state: present
+        update_cache: yes
+#    - name: Make sure pymysql is present
+#      pip:
+#        name: pymysql
+#        state: present
+    - name: Editing listen DB address
+      lineinfile: dest=/etc/mysql/mysql.conf.d/mysqld.cnf regexp='^bind-address' line='bind-address            = 0.0.0.0'
+#    - lineinfile: dest=/etc/mysql/mysql.conf.d/mysqld.cnf regexp='^mysqlx-bind-address' line='mysqlx-bind-address     = 0.0.0.0'
+    - name: Restart Mysql
+      service:
+        name: mysql
+        state: restarted
+    - name: Create mysql user
+      mysql_user:
+        name: wp_user
+        password: wp_password
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+        priv: '*.*:ALL'
+        host: '%'
+        check_implicit_admin: true
+    - name: Create DB
+      mysql_db:
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+        name: wp_database
+        state: present
+

@@ -1,0 +1,7 @@
+---
+- name: restart etcd
+  systemd: name=etcd state=restarted enabled=yes
+
+- name: restart patroni
+  systemd: name=patroni state=restarted enabled=yes
+
